@@ -80,7 +80,6 @@ export class AdvancedVideoView extends AdvancedVideoViewBase {
     nativeView: UIView;
     _output: AVCaptureMovieFileOutput;
     _file: NSURL;
-    _connection: AVCaptureConnection;
     _device: AVCaptureDevice;
     private session: AVCaptureSession;
     public thumbnails: string[];
@@ -136,8 +135,9 @@ export class AdvancedVideoView extends AdvancedVideoViewBase {
     }
 
     [outputOrientation.getDefault](): Orientation {
-        if (!this._connection) return Orientation.Unknown;
-        return Orientation[NativeOrientation[this._connection.videoOrientation]];
+        const connection = this._output.connectionWithMediaType(AVMediaTypeVideo);
+        if (!connection) return Orientation.Unknown;
+        return Orientation[NativeOrientation[connection.videoOrientation]];
     }
 
     [outputOrientation.setNative](orientation: Orientation) {
@@ -199,12 +199,13 @@ export class AdvancedVideoView extends AdvancedVideoViewBase {
                 break;
         }
 
+        const connection = this._output.connectionWithMediaType(AVMediaTypeVideo);
         if (
-            this._connection &&
-            this._connection.supportsVideoOrientation &&
+            connection &&
+            connection.supportsVideoOrientation &&
             nativeOrientation !== NativeOrientation.Unknown
         ) {
-            this._connection.videoOrientation = nativeOrientation;
+            connection.videoOrientation = nativeOrientation;
         }
     }
 
@@ -235,14 +236,12 @@ export class AdvancedVideoView extends AdvancedVideoViewBase {
 
             this._output = AVCaptureMovieFileOutput.alloc().init();
             this._output.movieFragmentInterval = kCMTimeInvalid;
-            this._connection =  this._output.connectionWithMediaType(AVMediaTypeVideo);
-
-            this._setOutputOrientation(this.outputOrientation);
+            const connection =  this._output.connectionWithMediaType(AVMediaTypeVideo);
 
             if (this._output.availableVideoCodecTypes.containsObject(AVVideoCodecTypeH264)) {
                 const codec = {};
                 codec[AVVideoCodecKey] = AVVideoCodecTypeH264;
-                this._output.setOutputSettingsForConnection(<any>codec, this._connection);
+                this._output.setOutputSettingsForConnection(<any>codec, connection);
             }
             let format = '.mp4'; // options && options.format === 'default' ? '.mov' : '.' + options.format;
             this._fileName = `VID_${+new Date()}${format}`;
@@ -322,6 +321,8 @@ export class AdvancedVideoView extends AdvancedVideoViewBase {
             }
 
             dispatch_async(dispatch_get_current_queue(), () => {
+                this._setOutputOrientation(this.outputOrientation);
+
                 preview.frame = this.nativeView.bounds;
                 this.nativeView.layer.addSublayer(preview);
             });

@@ -12,7 +12,6 @@ export declare class AdvancedVideoView extends AdvancedVideoViewBase {
     nativeView: UIView;
     _output: AVCaptureMovieFileOutput;
     _file: NSURL;
-    _connection: AVCaptureConnection;
     _device: AVCaptureDevice;
     private session;
     thumbnails: string[];
