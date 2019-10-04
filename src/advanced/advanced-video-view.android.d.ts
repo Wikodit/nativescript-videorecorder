@@ -6,7 +6,7 @@ export declare enum NativeOrientation {
     Portrait = 1,
     PortraitUpsideDown = 2,
     LandscapeLeft = 3,
-    LandscapeRight = 4,
+    LandscapeRight = 4
 }
 export declare class AdvancedVideoView extends AdvancedVideoViewBase {
     thumbnails: any[];
@@ -18,9 +18,9 @@ export declare class AdvancedVideoView extends AdvancedVideoViewBase {
     initNativeView(): void;
     onLoaded(): void;
     onUnloaded(): void;
-    private setCameraPosition(position);
-    private setCameraOrientation(orientation);
-    private setQuality(quality);
+    private setCameraPosition;
+    private setCameraOrientation;
+    private setQuality;
     readonly isTorchAvailable: boolean;
     toggleTorch(): void;
     toggleCamera(): void;

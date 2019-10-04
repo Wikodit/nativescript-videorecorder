@@ -327,10 +327,18 @@ export class AdvancedVideoView extends AdvancedVideoViewBase {
                 this.nativeView.layer.addSublayer(preview);
             });
         } catch (ex) {
+            let msg = 'unknown';
+
+            if (typeof ex.getMessage === 'function') {
+                msg = ex.getMessage();
+            } else if(ex.localizedDescription) {
+                msg = ex.localizedDescription;
+            }
+            console.log(msg);
             this.notify({
                 eventName: 'error',
                 object: fromObject({
-                    message: ex.getMessage()
+                    message: msg
                 })
             });
         }

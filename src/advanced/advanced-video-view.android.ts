@@ -127,7 +127,7 @@ export class AdvancedVideoView extends AdvancedVideoViewBase {
         this.setQuality(this.quality);
         this.setCameraPosition(this.cameraPosition);
         this.setCameraOrientation(this.outputOrientation);
-        this.nativeView.setCameraOrientation(2);
+        // this.nativeView.setCameraOrientation(2);
     }
 
     public onLoaded(): void {

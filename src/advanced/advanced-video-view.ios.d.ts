@@ -6,7 +6,7 @@ export declare enum NativeOrientation {
     Portrait = 1,
     PortraitUpsideDown = 2,
     LandscapeLeft = 3,
-    LandscapeRight = 4,
+    LandscapeRight = 4
 }
 export declare class AdvancedVideoView extends AdvancedVideoViewBase {
     nativeView: UIView;
@@ -17,7 +17,7 @@ export declare class AdvancedVideoView extends AdvancedVideoViewBase {
     thumbnails: string[];
     _fileName: string;
     folder: any;
-    private requestStoragePermission();
+    private requestStoragePermission;
     static isAvailable(): boolean;
     createNativeView(): UIView;
     initNativeView(): void;
@@ -26,8 +26,8 @@ export declare class AdvancedVideoView extends AdvancedVideoViewBase {
     readonly duration: number;
     readonly isTorchAvailable: boolean;
     toggleTorch(): void;
-    private _setOutputOrientation(orientation);
-    private openCamera();
+    private _setOutputOrientation;
+    private openCamera;
     startRecording(): void;
     stopRecording(): void;
     stopPreview(): void;
@@ -35,5 +35,5 @@ export declare class AdvancedVideoView extends AdvancedVideoViewBase {
     startPreview(): void;
     onLayout(left: number, top: number, right: number, bottom: number): void;
     onMeasure(widthMeasureSpec: number, heightMeasureSpec: number): void;
-    private extractThumbnails();
+    private extractThumbnails;
 }
