@@ -23,20 +23,29 @@ export enum NativeOrientation {
     LandscapeRight,
 }
 
-@ObjCClass(AVCaptureFileOutputRecordingDelegate)
-class AVCaptureFileOutputRecordingDelegateImpl extends NSObject
-    implements AVCaptureFileOutputRecordingDelegate {
-    private _owner: WeakRef<AdvancedVideoView>;
-    private _interval;
-
-    public static initWithOwner(
+declare class AVCaptureFileOutputRecordingDelegateImplement extends NSObject implements AVCaptureFileOutputRecordingDelegate {
+    static initWithOwner (
         owner: WeakRef<AdvancedVideoView>
-    ): AVCaptureFileOutputRecordingDelegateImpl {
-        let delegate = new AVCaptureFileOutputRecordingDelegateImpl();
-        delegate._owner = owner;
-        return delegate;
-    }
+    ): AVCaptureFileOutputRecordingDelegateImplement;
+    private _owner: WeakRef<AdvancedVideoView>;
 
+    captureOutputDidFinishRecordingToOutputFileAtURLFromConnectionsError(
+        captureOutput: AVCaptureFileOutput,
+        outputFileURL: NSURL,
+        connections: NSArray<any>,
+        error: NSError
+    ): void;
+
+    captureOutputDidStartRecordingToOutputFileAtURLFromConnections(
+        captureOutput: AVCaptureFileOutput,
+        fileURL: NSURL,
+        connections: NSArray<any>
+    ): void;
+}
+
+// Don't use class to solve some es6 targetting issues with TypeScript
+// see https://github.com/NativeScript/ios-runtime/issues/818
+const AVCaptureFileOutputRecordingDelegateImpl = (NSObject as any).extend({
     captureOutputDidFinishRecordingToOutputFileAtURLFromConnectionsError(
         captureOutput: AVCaptureFileOutput,
         outputFileURL: NSURL,
@@ -44,6 +53,10 @@ class AVCaptureFileOutputRecordingDelegateImpl extends NSObject
         error: NSError
     ): void {
         const owner = this._owner.get();
+        if (!owner) {
+            return;
+        }
+
         if (!error) {
             owner.notify({
                 eventName: 'finished',
@@ -61,7 +74,7 @@ class AVCaptureFileOutputRecordingDelegateImpl extends NSObject
         }
 
         owner.startPreview();
-    }
+    },
 
     captureOutputDidStartRecordingToOutputFileAtURLFromConnections(
         captureOutput: AVCaptureFileOutput,
@@ -69,12 +82,27 @@ class AVCaptureFileOutputRecordingDelegateImpl extends NSObject
         connections: NSArray<any>
     ): void {
         const owner = this._owner.get();
+        if (!owner) {
+            return;
+        }
+
         owner.notify({
             eventName: 'started',
             object: fromObject({})
         });
-    }
-}
+    },
+}, {
+    protocols: [AVCaptureFileOutputRecordingDelegate]
+}) as typeof AVCaptureFileOutputRecordingDelegateImplement;
+
+(AVCaptureFileOutputRecordingDelegateImpl as any).initWithOwner = function (
+    owner: WeakRef<AdvancedVideoView>
+): AVCaptureFileOutputRecordingDelegateImplement {
+    let delegate = (AVCaptureFileOutputRecordingDelegateImpl as any).new() as
+    AVCaptureFileOutputRecordingDelegateImplement;
+    (delegate as any)._owner = owner;
+    return delegate;
+};
 
 export class AdvancedVideoView extends AdvancedVideoViewBase {
     nativeView: UIView;
@@ -84,6 +112,7 @@ export class AdvancedVideoView extends AdvancedVideoViewBase {
     private session: AVCaptureSession;
     public thumbnails: string[];
     _fileName: string;
+    private _delegate: AVCaptureFileOutputRecordingDelegateImplement;
     folder;
 
     private requestStoragePermission(): Promise<any> {
@@ -112,6 +141,11 @@ export class AdvancedVideoView extends AdvancedVideoViewBase {
     }
 
     public initNativeView() {
+        this._delegate = AVCaptureFileOutputRecordingDelegateImpl.initWithOwner(new WeakRef(this));
+    }
+
+    disposeNativeView() {
+        this._delegate = null;
     }
 
     onLoaded() {
@@ -331,7 +365,7 @@ export class AdvancedVideoView extends AdvancedVideoViewBase {
 
             if (typeof ex.getMessage === 'function') {
                 msg = ex.getMessage();
-            } else if(ex.localizedDescription) {
+            } else if (ex.localizedDescription) {
                 msg = ex.localizedDescription;
             }
             console.log(msg);
@@ -345,12 +379,9 @@ export class AdvancedVideoView extends AdvancedVideoViewBase {
     }
 
     public startRecording(): void {
-        let delegate = AVCaptureFileOutputRecordingDelegateImpl.initWithOwner(
-            new WeakRef(this)
-        );
         this._output.startRecordingToOutputFileURLRecordingDelegate(
             this._file,
-            delegate
+            this._delegate
         );
     }
 

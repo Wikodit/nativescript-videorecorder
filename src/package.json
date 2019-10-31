@@ -1,5 +1,5 @@
 {
-  "name": "@agregar/nativescript-videorecorder",
+  "name": "nativescript-videorecorder",
   "version": "3.1.0-beta.0",
   "description": "NativeScript videorecording plugin",
   "main": "videorecorder",
@@ -51,7 +51,7 @@
   "homepage": "https://github.com/triniwiz/nativescript-videorecorder",
   "readmeFilename": "README.md",
   "devDependencies": {
-    "tns-core-modules": "^6.1.0",
+    "tns-core-modules": "^6.1.2",
     "tns-platform-declarations": "^6.1.0",
     "typescript": "~3.5.3",
     "prompt": "^1.0.0",
@@ -66,5 +66,7 @@
     "url": "git://github.com/Agregar/nativescript-videorecorder.git"
   },
   "bootstrapper": "nativescript-plugin-seed",
-  "publishConfig": { "registry": "https://npm.pkg.github.com" }
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
 }

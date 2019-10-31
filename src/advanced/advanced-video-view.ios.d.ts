@@ -16,11 +16,13 @@ export declare class AdvancedVideoView extends AdvancedVideoViewBase {
     private session;
     thumbnails: string[];
     _fileName: string;
+    private _delegate;
     folder: any;
     private requestStoragePermission;
     static isAvailable(): boolean;
     createNativeView(): UIView;
     initNativeView(): void;
+    disposeNativeView(): void;
     onLoaded(): void;
     onUnloaded(): void;
     readonly duration: number;
