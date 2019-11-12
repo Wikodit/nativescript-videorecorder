@@ -1,6 +1,6 @@
 {
-  "name": "nativescript-videorecorder",
-  "version": "3.1.0-beta.0",
+  "name": "@wikodit/nativescript-videorecorder",
+  "version": "3.2.0-beta.0",
   "description": "NativeScript videorecording plugin",
   "main": "videorecorder",
   "typings": "index.d.ts",
@@ -42,6 +42,10 @@
     {
       "name": "Victor Sosa",
       "url": "https://github.com/victorsosa"
+    },
+    {
+      "name": "Jérémy Trufier",
+      "url": "https://github.com/Tronix117"
     }
   ],
   "bugs": {
@@ -63,7 +67,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/Agregar/nativescript-videorecorder.git"
+    "url": "git://github.com/Wikodit/nativescript-videorecorder.git"
   },
   "bootstrapper": "nativescript-plugin-seed",
   "publishConfig": {
