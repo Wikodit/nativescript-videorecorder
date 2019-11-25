@@ -1,9 +1,14 @@
 repositories {
-    mavenLocal()
+    maven {
+        url 'https://dl.bintray.com/triniwiz/maven/'
+    }
+    maven {
+        url 'https://maven.google.com'
+    }
 }
 
 dependencies {
-    implementation ('co.fitcom:fancycamera:1.2.0'){
+    implementation ('co.fitcom:fancycamera:1.2.2'){
         exclude group: "com.android.support"
     }
 }
