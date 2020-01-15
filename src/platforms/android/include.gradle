@@ -1,5 +1,11 @@
 repositories {
-    mavenLocal()
+    maven { 
+        url("https://maven.pkg.github.com/wikodit/fancycamera") 
+        credentials {
+            username = System.getenv("USERNAME")
+            password = System.getenv("PASSWORD")
+        }
+    }
 }
 
 dependencies {
